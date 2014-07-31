@@ -13,6 +13,7 @@ import (
 type TestingT interface {
 	Logf(format string, args ...interface{})
 	Errorf(format string, args ...interface{})
+	Fatalf(format string, args ...interface{})
 }
 
 /*
@@ -261,7 +262,7 @@ func (m *Mock) AssertExpectations(t TestingT) bool {
 	}
 
 	if somethingMissing {
-		t.Errorf("FAIL: %d out of %d expectation(s) were met.\n\tThe code you are testing needs to make %d more call(s).\n\tat: %s", len(m.ExpectedCalls)-failedExpectations, len(m.ExpectedCalls), failedExpectations, assert.CallerInfo())
+		t.Fatalf("FAIL: %d out of %d expectation(s) were met.\n\tThe code you are testing needs to make %d more call(s).\n\tat: %s", len(m.ExpectedCalls)-failedExpectations, len(m.ExpectedCalls), failedExpectations, assert.CallerInfo())
 	}
 
 	return !somethingMissing
@@ -432,7 +433,7 @@ func (args Arguments) Assert(t TestingT, objects ...interface{}) bool {
 
 	// there are differences... report them...
 	t.Logf(diff)
-	t.Errorf("%sArguments do not match.", assert.CallerInfo())
+	t.Fatalf("%sArguments do not match.", assert.CallerInfo())
 
 	return false
 
